@@ -3,32 +3,55 @@
 #KeyHistory 0
 ListLines, Off
 
+;---------------------------------------
 strIniFilename := A_ScriptDir . "\gui-hotkey.ini"
-IniRead, strHotkeyPopup, %strIniFilename%, Global, PopupHotkey, MButton
-IniRead, strHotkeyNewExplorer, %strIniFilename%, Global, NewExplorerHotkey, +MButton
-IniRead, strHotkeySettings, %strIniFilename%, Global, SettingsHotkey, ^#f
-
 strMouseButtons := " |LButton|MButton|RButton|XButton1|XButton2|WheelUp|WheelDown|WheelLeft|WheelRight|" ; leave last | to enable default value
 
+;---------------------------------------
+; Ini key names, matching hotkey variables names and default values for hotkeys
+strIniKeyNames := "PopupHotkey|NewExplorerHotkey|SettingsHotkey"
+StringSplit, arrIniKeyNames, strIniKeyNames, |
+strHotkeyVarNames := "strHotkeyPopup|strHotkeyNewExplorer|strHotkeySettings"
+StringSplit, arrHotkeyVarNames, strHotkeyVarNames, |
+strHotkeyDefaults := "MButton|+MButton|^#f"
+StringSplit, arrHotkeyDefaults, strHotkeyDefaults, |
+
+;---------------------------------------
+; Gui hotkey titles and descriptions
 strTitles := "Folders Popup|New Explorer|Settings"
 StringSplit, arrTitles, strTitles, |
+strDescriptions1 := "Choose the hotkey or mouse button combination that will open the folders popup menu in Windows Explorer or file dialog boxes. By default, this is the middle mouse button (MButton) without any modifier key."
+strDescriptions2 := "Choose the hotkey or mouse button combination that will open the folders popup menu over any window and navigate to the selected folder in a new Windows Explorer window."
+strDescriptions3 := "Choose the hotkey or mouse button combination that will open the Folders Popup setting dialog box. By default, this is Control+Windows+F."
+; Need more hotkey? Add it above...
 
-SplitHotkey(strHotkeyPopup, strMouseButtons, strModifiers1, strKey1, strMouseButton1, strMouseButtonsWithDefault1)
-SplitHotkey(strHotkeyNewExplorer, strMouseButtons, strModifiers2, strKey2, strMouseButton2, strMouseButtonsWithDefault2)
-SplitHotkey(strHotkeySettings, strMouseButtons, strModifiers3, strKey3, strMouseButton3, strMouseButtonsWithDefault3)
-
-strDescriptions := "Choose the hotkey or mouse button combination that will open the folders popup menu in Windows Explorer or file dialog boxes. By default, this is the middle mouse button (MButton) without any modifier key.|Choose the hotkey or mouse button combination that will open the folders popup menu over any window and navigate to the selected folder in a new Windows Explorer window.|Choose the hotkey or mouse button combination that will open the Folders Popup setting dialog box. By default, this is Control+Windows+F."
-StringSplit, arrDescriptions, strDescriptions, |
-
+;---------------------------------------
+; Build Gui header
 Gui, Font, s8 w700
 Gui, Add, Text, x5 y10, GUI-HOTKEY Demo
 Gui, Font
-loop, % arrTitles%0%
+; Build Hotkey gui lines
+loop, % arrIniKeyNames%0%
+{
+	; Read the first hotkey in the ini file
+	IniRead, arrHotkeyVarNames%A_Index%, %strIniFilename%, Global, % arrIniKeyNames%A_Index%, % arrHotkeyDefaults%A_Index%
+	; Prepare global arrays used by GuiHotkey function
+	SplitHotkey(arrHotkeyVarNames%A_Index%, strMouseButtons
+		, strModifiers%A_Index%, strKey%A_Index%, strMouseButton%A_Index%, strMouseButtonsWithDefault%A_Index%)
+	; Code it
 	GuiHotkey(A_Index)
+}
+;---------------------------------------
+; Gui footer
 Gui, Add, Button, y+10 x5 vbtnSave gButtonSave, Save
-GuiControl, Focus, strKey1
+GuiControl, Focus, btnSave
+
+;---------------------------------------
+; Show until user click Save
 Gui, Show
 return
+; End of script startup
+;---------------------------------------
 
 
 
@@ -179,5 +202,3 @@ GetFirstNotModifier(strHotkey)
 	return intPos
 }
 ;---------------------------------------
-
-
