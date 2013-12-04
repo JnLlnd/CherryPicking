@@ -1,14 +1,23 @@
 ;===============================================
 /*
-	Gui-Hotkey
+	Gui-Hotkey v1.0
+	
+	Gui form to define hotkeys including:
+	- access to the Windows key modifier (#)
+	- easy dropdown list access to all mouse buttons
+	- save and retrieve hotkey definitions to/from an .ini file
+
 	Proof of concept for a future version of FoldersPopup (www.code.jeanlalonde.ca/folderspopup)
-	Written using AutoHotkey_L v1.1.09.03+ (http://l.autohotkey.net/)
+	Written using AutoHotkey_L v1.1.13.00+ (http://l.autohotkey.net/)
 	By Jean Lalonde (JnLlnd on AHKScript.org forum)
+
+	Thanks for the authors of these sources of inspiration:
+	http://www.autohotkey.com/board/topic/47439-user-defined-dynamic-hotkeys/
+	https://github.com/evilC/ADHD-AHK-Dynamic-Hotkeys-for-Dummies
 */
+
 #NoEnv
 #SingleInstance force
-#KeyHistory 0
-ListLines, Off
 
 ;---------------------------------------
 SplitPath, A_ScriptName, , , , strIniFilename
