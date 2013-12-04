@@ -1,10 +1,19 @@
+;===============================================
+/*
+	Gui-Hotkey
+	Proof of concept for a future version of FoldersPopup (www.code.jeanlalonde.ca/folderspopup)
+	Written using AutoHotkey_L v1.1.09.03+ (http://l.autohotkey.net/)
+	By Jean Lalonde (JnLlnd on AHKScript.org forum)
+*/
 #NoEnv
 #SingleInstance force
 #KeyHistory 0
 ListLines, Off
 
 ;---------------------------------------
-strIniFilename := A_ScriptDir . "\gui-hotkey.ini"
+SplitPath, A_ScriptName, , , , strIniFilename
+strIniFilename := strIniFilename . ".ini"
+strIniPathFilename := A_ScriptDir . "\" . strIniFilename
 strMouseButtons := " |LButton|MButton|RButton|XButton1|XButton2|WheelUp|WheelDown|WheelLeft|WheelRight|" ; leave last | to enable default value
 
 ;---------------------------------------
@@ -34,7 +43,7 @@ Gui, Font
 loop, % arrIniKeyNames%0%
 {
 	; Read the first hotkey in the ini file
-	IniRead, arrHotkeyVarNames%A_Index%, %strIniFilename%, Global, % arrIniKeyNames%A_Index%, % arrHotkeyDefaults%A_Index%
+	IniRead, arrHotkeyVarNames%A_Index%, %strIniPathFilename%, Global, % arrIniKeyNames%A_Index%, % arrHotkeyDefaults%A_Index%
 	; Prepare global arrays used by GuiHotkey function
 	SplitHotkey(arrHotkeyVarNames%A_Index%, strMouseButtons
 		, strModifiers%A_Index%, strKey%A_Index%, strMouseButton%A_Index%, strMouseButtonsWithDefault%A_Index%)
@@ -43,7 +52,8 @@ loop, % arrIniKeyNames%0%
 }
 ;---------------------------------------
 ; Gui footer
-Gui, Add, Button, y+10 x5 vbtnSave gButtonSave, Save
+Gui, Add, Button, x170 vbtnSave gButtonSave, Save to %strIniFilename%
+Gui, Add, Text
 GuiControl, Focus, btnSave
 
 ;---------------------------------------
@@ -106,16 +116,18 @@ Loop, % arrIniVarNames%0%
 	strHotkey%A_Index% := Trim(strKey%A_Index% . strMouse%A_Index%)
 	if StrLen(strHotkey%A_Index%)
 	{
-		if (blnCtrl%A_Index%)
-			strHotkey%A_Index% := "^" . strHotkey%A_Index%
-		if (blnShift%A_Index%)
-			strHotkey%A_Index% := "+" . strHotkey%A_Index%
-		if (blnAlt%A_Index%)
-			strHotkey%A_Index% := "!" . strHotkey%A_Index%
 		if (blnWin%A_Index%)
 			strHotkey%A_Index% := "#" . strHotkey%A_Index%
-		IniWrite, % strHotkey%A_Index%, %strIniFilename%, Global, % arrIniVarNames%A_Index%
+		if (blnAlt%A_Index%)
+			strHotkey%A_Index% := "!" . strHotkey%A_Index%
+		if (blnShift%A_Index%)
+			strHotkey%A_Index% := "+" . strHotkey%A_Index%
+		if (blnCtrl%A_Index%)
+			strHotkey%A_Index% := "^" . strHotkey%A_Index%
+		IniWrite, % strHotkey%A_Index%, %strIniPathFilename%, Global, % arrIniVarNames%A_Index%
 	}
+	else ; decide if you want to delete the key or keep the existing one - here we delete it
+		IniDelete, %strIniPathFilename%, Global, % arrIniVarNames%A_Index%
 }
 ExitApp
 return
