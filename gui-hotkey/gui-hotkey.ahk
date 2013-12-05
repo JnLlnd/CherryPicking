@@ -38,9 +38,9 @@ StringSplit, arrHotkeyDefaults, strHotkeyDefaults, |
 ; Gui hotkey titles and descriptions
 strTitles := "Folders Popup|New Explorer|Settings"
 StringSplit, arrTitles, strTitles, |
-strDescriptions1 := "Choose the hotkey or mouse button combination that will open the folders popup menu in Windows Explorer or file dialog boxes. By default, this is the middle mouse button (MButton) without any modifier key."
-strDescriptions2 := "Choose the hotkey or mouse button combination that will open the folders popup menu over any window and navigate to the selected folder in a new Windows Explorer window."
-strDescriptions3 := "Choose the hotkey or mouse button combination that will open the Folders Popup setting dialog box. By default, this is Control+Windows+F."
+arrDescriptions1 := "Choose the hotkey or mouse button combination that will open the folders popup menu in Windows Explorer or file dialog boxes. By default, this is the middle mouse button (MButton) without any modifier key."
+arrDescriptions2 := "Choose the hotkey or mouse button combination that will open the folders popup menu over any window and navigate to the selected folder in a new Windows Explorer window."
+arrDescriptions3 := "Choose the hotkey or mouse button combination that will open the Folders Popup setting dialog box. By default, this is Control+Windows+F."
 ; Need more hotkey? Add it above...
 
 ;---------------------------------------
